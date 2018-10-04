@@ -5,6 +5,8 @@
 #include "Vector3.h"
 #include "Ray.h"
 
+#include "Sphere.h"
+
 using namespace std;
 
 #define width 200
@@ -19,9 +21,12 @@ int main()
 
     Vector3 lowerLeft(-width / 100, -height / 100, -1);
     Vector3 horizontal(4, 0, 0);
-    Vector3 vectical(0, 2, 0);
+    Vector3 vertical(0, 2, 0);
 
     Vector3 origin(0, 0, 0);
+    Vector3 sphereCenter(0, 0, -1);
+
+    Sphere sphere(sphereCenter, 0.5);
 
     for(int j = height - 1; j >= 0; j--)
     {
@@ -30,8 +35,20 @@ int main()
             float u = float(i) / float(width);
             float v = float(j) / float(height);
 
-            Ray ray(origin, lowerLeft + u*horizontal + v*vectical);
-            Vector3 color = ray.GetClearColor();
+            Ray ray(origin, lowerLeft + u*horizontal + v*vertical);
+
+            Vector3 color;
+            float t = sphere.RayHit(ray);
+            if(t > 0)
+            {
+                Vector3 normal = UnitVector(ray.GetPoint(t) + Vector3(0, 0, -1));
+                color = 0.5 * Vector3(normal.x + 1, normal.y + 1, normal.z + 1 );
+            }
+            else
+            {
+                color = ray.GetClearColor();
+            }
+                
 
             int ir = (255.99 * color.x);
             int ig = (255.99 * color.y);

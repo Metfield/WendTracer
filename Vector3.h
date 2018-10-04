@@ -11,57 +11,56 @@ public:
     Vector3() { }
     Vector3(float _x, float _y, float _z ) : x(_x), y(_y), z(_z) { }
     
-    inline float Length() const;
-    inline float SquaredLength() const;
-    inline void MakeUnitVector();
-
-    inline float Dot(const Vector3 &other);
-    inline Vector3 Cross(const Vector3 &other);
+     float Length() const
+    {
+        return x*x + y*y + z*z;
+    }
     
-    // Static functions
-    static Vector3 UnitVector(Vector3 vector);
-    static float Dot(const Vector3 &v1, const Vector3 &v2);
-    static Vector3 Cross(const Vector3 &v1, const Vector3 &v2);
+     float SquaredLength() const;
+     void MakeUnitVector();
 
-    static Vector3 Lerp(const Vector3 &from, const Vector3 &to, float t);
+    // const Vector3 operator+() const { return *this; }
+    Vector3 operator-() const { return Vector3(-x, -y, -z); }
 
-    //inline const Vector3 operator+() const { return *this; }
-    inline Vector3 operator-() const { return Vector3(-x, -y, -z); }
+    Vector3 operator-(const Vector3 &other);
+    Vector3 operator*(const Vector3 &other);
+    Vector3 operator*(const float &scalar);
+    Vector3 operator/(const Vector3 &other);
+    Vector3 operator/(const float &scalar);
 
-    inline Vector3 operator-(const Vector3 &other);
-    inline Vector3 operator*(const Vector3 &other);
-    inline Vector3 operator*(const float &scalar);
-    inline Vector3 operator/(const Vector3 &other);
-    inline Vector3 operator/(const float &scalar);
+     Vector3& operator+=(const Vector3 &other);
+     Vector3& operator-=(const Vector3 &other);
+     Vector3& operator*=(const Vector3 &other);
+     Vector3& operator/=(const Vector3 &other);
+     Vector3& operator*=(const float scalar);
+     Vector3& operator/=(const float scalar);
 
-    inline Vector3& operator+=(const Vector3 &other);
-    inline Vector3& operator-=(const Vector3 &other);
-    inline Vector3& operator*=(const Vector3 &other);
-    inline Vector3& operator/=(const Vector3 &other);
-    inline Vector3& operator*=(const float scalar);
-    inline Vector3& operator/=(const float scalar);
-
-    inline std::istream& operator>>(std::istream &is);
-    inline std::ostream& operator<<(std::ostream &os);
+     std::istream& operator>>(std::istream &is);
+     std::ostream& operator<<(std::ostream &os);
 };
 
-// Non-member functions
 inline Vector3 operator+(const Vector3 &v1, const Vector3 &v2)
 {
     return Vector3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
 }
 
-inline Vector3 operator-(const Vector3 &v1, const Vector3 &v2)
+inline  Vector3 operator-(const Vector3 &v1, const Vector3 &v2)
 {
     return Vector3(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
 }
 
-inline Vector3 operator*(const float scalar, const Vector3 &v)
+inline  Vector3 operator*(const float scalar, const Vector3 &v)
 {
     return Vector3(v.x*scalar, v.y*scalar, v.z*scalar);
 }
 
-inline Vector3 operator/(const float scalar, const Vector3 &v)
+inline  Vector3 operator/(const Vector3 &v, const float scalar)
 {
     return Vector3(v.x/scalar, v.y/scalar, v.z/scalar);
 }
+
+// Non-member functions
+Vector3 UnitVector(Vector3 vector);
+float Dot(const Vector3 &v1, const Vector3 &v2);
+Vector3 Cross(const Vector3 &v1, const Vector3 &v2);
+Vector3 Lerp(const Vector3 &from, const Vector3 &to, float t);
