@@ -1,16 +1,38 @@
 #include <iostream>
 #include <fstream>
 #include <math.h>
+#include <float.h>
 
 #include "Vector3.h"
 #include "Ray.h"
 
 #include "Sphere.h"
 
+#include "Hitable.h"
+#include "HitableList.h"
+
 using namespace std;
 
 #define width 200
 #define height 100
+
+Vector3 GetClearColor(Vector3 rayDirection)
+{
+    Vector3 unitDirection = UnitVector(rayDirection);
+    float t = 0.5f * unitDirection.y + 1.0f;
+
+    return Lerp(Vector3(1.0f, 1.0f, 1.0f), Vector3(0.5f, 0.7f, 1.0f), t);
+}
+
+Vector3 Color(const Ray& ray, Hitable *world)
+{
+    HitInfo hitInfo;
+
+    if(world->Hit(ray, 0, MAXFLOAT, hitInfo))
+        return 0.5f * Vector3(hitInfo.normal.x + 1, hitInfo.normal.y + 1, hitInfo.normal.z + 1);
+    
+    return GetClearColor(ray.direction);
+}
 
 int main() 
 {
@@ -26,7 +48,13 @@ int main()
     Vector3 origin(0, 0, 0);
     Vector3 sphereCenter(0, 0, -1);
 
-    Sphere sphere(sphereCenter, 0.5);
+    Hitable *hitables[2];
+    hitables[0] = new Sphere(sphereCenter, 0.5);
+    
+    sphereCenter -= Vector3(0, 100.5, 0);
+    hitables[1] = new Sphere(sphereCenter, 100);
+
+    Hitable *world = new HitableList(hitables, 2);
 
     for(int j = height - 1; j >= 0; j--)
     {
@@ -37,18 +65,17 @@ int main()
 
             Ray ray(origin, lowerLeft + u*horizontal + v*vertical);
 
-            Vector3 color;
-            float t = sphere.RayHit(ray);
-            if(t > 0)
-            {
-                Vector3 normal = UnitVector(ray.GetPoint(t) + Vector3(0, 0, -1));
-                color = 0.5 * Vector3(normal.x + 1, normal.y + 1, normal.z + 1 );
-            }
-            else
-            {
-                color = ray.GetClearColor();
-            }
-                
+            Vector3 color = Color(ray, world);
+
+            if(color.x < 0)
+                color.x = 0;
+            
+            if(color.y < 0)
+                color.y = 0;
+
+            if(color.z < 0)
+                color.z = 0;
+
 
             int ir = (255.99 * color.x);
             int ig = (255.99 * color.y);

@@ -1,5 +1,6 @@
 #pragma once
 #include "Vector3.h"
+#include "Hitable.h"
 
 class Ray;
 
@@ -11,7 +12,7 @@ class Ray;
 // Solve with quadratic where
 //    t > 0: two real intersections
 //    t = 0: one intersection
-class Sphere
+class Sphere : public Hitable
 {
 public:
     Vector3 center;
@@ -20,5 +21,5 @@ public:
     Sphere() { }
     Sphere(Vector3& _center, float _radius) : center(_center), radius(_radius) { }
 
-    float RayHit(const Ray& ray);
+    virtual bool Hit(const Ray& ray, float tMin, float tMax, HitInfo& hitInfo) const override;
 };
