@@ -64,18 +64,7 @@ int main()
             float v = float(j) / float(height);
 
             Ray ray(origin, lowerLeft + u*horizontal + v*vertical);
-
             Vector3 color = Color(ray, world);
-
-            if(color.x < 0)
-                color.x = 0;
-            
-            if(color.y < 0)
-                color.y = 0;
-
-            if(color.z < 0)
-                color.z = 0;
-
 
             int ir = (255.99 * color.x);
             int ig = (255.99 * color.y);

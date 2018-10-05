@@ -17,7 +17,7 @@ bool Sphere::Hit(const Ray& ray, float tMin, float tMax, HitInfo& hitInfo) const
         return false;
 
     // TODO: Beautify this shit code
-    float t = (-b - sqrt(discriminant)) / a;
+    float t = (-b - sqrt(discriminant)) / (2*a);
     if(t > tMin && t < tMax)
     {
         hitInfo.t = t;
@@ -27,15 +27,15 @@ bool Sphere::Hit(const Ray& ray, float tMin, float tMax, HitInfo& hitInfo) const
         return true;
     }
 
-    // t = (-b + sqrt(discriminant)) / a;
-    // if(t > tMin && t < tMax)
-    // {
-    //     hitInfo.t = t;
-    //     hitInfo.point = ray.GetPoint(t);
-    //     hitInfo.normal = (hitInfo.point - center) / radius;
+    t = (-b + sqrt(discriminant)) / (2*a);
+    if(t > tMin && t < tMax)
+    {
+        hitInfo.t = t;
+        hitInfo.point = ray.GetPoint(t);
+        hitInfo.normal = (hitInfo.point - center) / radius;
 
-    //     return true;
-    // }
+        return true;
+    }
 
     return false;
 }
